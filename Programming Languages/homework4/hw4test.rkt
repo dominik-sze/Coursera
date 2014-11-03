@@ -55,6 +55,8 @@
    (check-equal? (stream-for-n-steps (stream-add-zero ones) 1) (list (cons 0 1)) "stream-add-zero test")
    (check-equal? (stream-for-n-steps (stream-add-zero ones) 2) (list (cons 0 1) (cons 0 1)) "stream-add-zero test")
    (check-equal? (stream-for-n-steps (stream-add-zero dan-then-dog) 1) (list (cons 0 "dan.jpg")) "stream-add-zero test")
+   (check-equal? (stream-for-n-steps (stream-add-zero dan-then-dog) 4) (list (cons 0 "dan.jpg") (cons 0 "dog.jpg") (cons 0 "dan.jpg") (cons 0 "dog.jpg")) "stream-add-zero test")
+   (check-equal? (stream-for-n-steps (stream-add-zero ones) 5) (list (cons 0 1) (cons 0 1) (cons 0 1) (cons 0 1) (cons 0 1)) "stream-add-zero test")
    
    ; cycle-lists test
    (check-equal? (stream-for-n-steps (cycle-lists (list 1) (list "a" "b")) 0) (list ) 
@@ -70,11 +72,12 @@
    (check-equal? (vector-assoc 4 (vector (cons 2 1) (cons 3 1) (cons 4 1) (cons 5 1))) (cons 4 1) "vector-assoc test")
    
    ; cached-assoc tests
-   #|(check-equal? ((cached-assoc (list (cons 1 2) (cons 3 4)) 3) 3) (cons 3 4) "cached-assoc test")
+   (check-equal? ((cached-assoc (list (cons 1 2) (cons 3 4)) 3) 3) (cons 3 4) "cached-assoc test")
+   (check-equal? ((cached-assoc (list (cons 1 2) (cons 3 4)) 3) 6) #f "cached-assoc test")
    
    ; while-less test
    (check-equal? (while-less 7 do (begin (set! a (+ a 1)) a)) #t "while-less test")
-   |#
+   
    ))
 
 

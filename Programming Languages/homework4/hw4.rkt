@@ -36,8 +36,8 @@
     (lambda () (dan))))
 
 (define (stream-add-zero s)
-  (letrec ([f (lambda() (cons (cons 0 (car (s))) f))])
-    (lambda () (f))))
+  (letrec ([f (lambda (x) (cons (cons 0 (car (x))) (lambda () (f (cdr (x))))))])
+    (lambda () (f s))))
 
 (define (cycle-lists xs ys)
   (letrec ([f (lambda(x) 
@@ -54,3 +54,29 @@
                            (f(+ 1 x)))]
                       [#t (f (+ 1 x))]))])
           (f 0)))
+
+(define (cached-assoc xs n)
+  (letrec ([cache (make-vector n #f)]
+           [cache-index 0]
+           [cache-index++ (lambda () (if (< cache-index (- n 1))
+                                         (set! cache-index (add1 cache-index))
+                                         (set! cache-index 0)))]
+           [cache-insert (lambda (v) (vector-set! cache cache-index v) (cache-index++))]
+           [f (lambda (x)
+                (or (vector-assoc x cache)
+                    (let ([found (assoc x xs)])
+                      (if found
+                          (begin (cache-insert found) found)
+                          #f))))])
+    f))
+
+(define-syntax while-less
+  (syntax-rules (do)
+    [(while-less high do body)
+     (let ([hi high])
+       (letrec ([loop (lambda (it)
+                        (if (< it hi)
+                           (begin body (loop (+ 1 it)))
+                           #t))])
+         (loop body)))]))
+              
