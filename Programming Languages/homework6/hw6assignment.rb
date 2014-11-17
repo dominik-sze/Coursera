@@ -25,11 +25,8 @@ end
 class MyBoard < Board
 
   def initialize (game)
-    @grid = Array.new(num_rows) {Array.new(num_columns)}
+    super
     @current_block = MyPiece.next_piece(self)
-    @game  = game
-    @score = 0
-    @delay = 500
     @cheat = false
   end
 
